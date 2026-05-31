@@ -138,8 +138,19 @@ export class DropsService {
       this.prisma.drop.count({ where }),
     ]);
 
+    const dataWithSplit = data.map((drop) => {
+      const splitValue =
+        drop.participants.length > 0
+          ? Math.floor(drop.totalValue / drop.participants.length)
+          : 0;
+      return {
+        ...drop,
+        splitValue,
+      };
+    });
+
     return {
-      data,
+      data: dataWithSplit,
       total,
       page,
       limit,
